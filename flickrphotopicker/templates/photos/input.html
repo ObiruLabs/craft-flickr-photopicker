@@ -1,0 +1,69 @@
+{% macro flickrImages(model) %}
+<ul class="thumbsview">
+    <li ng-repeat="photo in {{ model }}">
+        <span class="flickr-photo--thumb"
+              ng-class="{ 'is-selected': photo.checked }"
+              ng-click="toggleSelected(photo.id)">
+            <img src="http://farm{[{ photo.farm }]}.staticflickr.com/{[{ photo.server }]}/{[{ photo.id }]}_{[{ photo.secret }]}_s.jpg">
+            <span ng-show="photo.checked" class="flickr-photo--checkmark">
+                <span>√</span>
+            </span>
+        </span>
+    </li>
+</ul>
+{% endmacro %}
+{% from _self import flickrImages %}
+
+<div class="flickr-photo"
+     ng-app="flickrPhotoPicker"
+     ng-controller="flickrPhotoPickerCtrl"
+     ng-init="form.rawSelected={{ values | json_encode() }}" ng-cloak>
+    <div>
+        <input type="hidden" name="{{name}}" value="">
+        <input ng-repeat="photo in form.photos"
+               ng-model="photo.checked"
+               type="checkbox"
+               value="{[{ photo.id }]}"
+               name="{{name}}[]">
+    </div>
+
+    <div class="flickr-photo--selected">
+        <p ng-hide="form.selected.length">
+            <span ng-class="{ 'is-hidden': form.photosLoaded }" class="spinner"></span>
+            <span class="flickr-photo--selected-text">{[{ form.selectedText }]}</span>
+        </p>
+        <div ng-hide="!form.selected.length || !form.photosLoaded"
+             ng-click="removeAllSelected()"
+             class="flickr-photo--remove btn">Remove all</div>
+        {{ flickrImages('form.selected') }}
+    </div>
+
+    <div class="flickr-photo--picker">
+        <div class="flickr-photo--photoset" ng-show="form.photosLoaded">
+            <span>Photo Set: </span>
+            <div class="select">
+                <select ng-model="form.photosetid">
+                    <option value="!!">All</option>
+                    <option ng-repeat="photoSet in form.photoSets | orderBy:'name'" value="{[{ photoSet.id }]}">
+                        {[{ photoSet.name }]}
+                    </option>
+                </select>
+            </div>
+            <div ng-click="setSelected(true)" class="btn">
+                Select All<span ng-show="form.photosetid != '!!'"> in set</span>
+            </div>
+            <div ng-click="setSelected(false)" class="btn">
+                Deselect All<span ng-show="form.photosetid != '!!'">  in set</span>
+            </div>
+        </div>
+        {{ flickrImages('form.photos | filter:{ photosetid: form.photosetid }') }}
+    </div>
+</div>
+
+{% includeCssResource "flickrphotopicker/css/flickr-photo.css" %}
+{% includeJsResource "flickrphotopicker/js/vendor/lodash.min.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/angular.min.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/angular-resource.min.js" %}
+{% includeJsResource "flickrphotopicker/js/app.js" %}
+{% includeJsResource "flickrphotopicker/js/services/flickr.js" %}
+{% includeJsResource "flickrphotopicker/js/controllers/flickrPhotoPickerCtrl.js" %}

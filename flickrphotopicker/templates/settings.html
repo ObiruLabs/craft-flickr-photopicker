@@ -1,0 +1,21 @@
+{% import "_includes/forms" as forms %}
+
+<div class="field">
+    {{ forms.textField({
+        label: 'Flickr API Key',
+        required: true,
+        instructions: 'Grab your app API key here: <a href="https://www.flickr.com/services/apps/by/me">https://www.flickr.com/services/apps/by/me</a>',
+        name: 'apiKey',
+        value: settings.apiKey
+    }) }}
+</div>
+
+<div class="field">
+    {{ forms.textField({
+        label: 'Flickr User ID',
+        required: true,
+        instructions: 'Find your user id from the URL of your account. Ex: https://www.flickr.com/photos/<i><b>91323258@N99</b></i>',
+        name: 'userId',
+        value: settings.userId
+    }) }}
+</div>
