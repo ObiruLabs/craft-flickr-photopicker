@@ -91,6 +91,7 @@ Example photo object when JSON encoded:
 * Lazy load and cache photoset images on the admin panel.
 * Smarter fetching of images when loading details.
 * Tutorial on this plugin.
+
 ### Ideas for Features
 * Ability to configure different user ids per field.
 * Ability to restrict a field to a certain photo set.
