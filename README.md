@@ -1,7 +1,7 @@
-# Craft Flickr Photo Picker Plugin
-This is a [Craft CMS](http://buildwithcraft.com/) plugin provides a custom field to pick Flickr photos.
+# Craft Flickr PhotoPicker
+This is a [Craft CMS](http://buildwithcraft.com/) plugin that provides a custom field to pick Flickr photos.
 
-![plugin demo](https://github.com/ObiruLabs/craft-flickr-photo-picker/raw/master/demo/FlickrPickerDemo.gif)
+![plugin demo](https://github.com/ObiruLabs/craft-flickr-photopicker/raw/master/demo/FlickrPickerDemo.gif)
 
 ## Installation
 To install FlickrPhotoPicker:
