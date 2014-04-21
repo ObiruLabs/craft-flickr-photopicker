@@ -5,23 +5,44 @@
  */
 angular.module('flickrPhotoPicker')
     .constant('PHOTOS_URL', Craft.getActionUrl('flickrPhotoPicker/photos/all'))
-    .factory('Flickr', ['PHOTOS_URL', '$resource', function (PHOTOS_URL, $resource) {
+    .constant('PHOTOSET_URL', Craft.getActionUrl('flickrPhotoPicker/photos/allPhotoSets'))
+    .constant('PHOTOSETPHOTOS_URL', Craft.getActionUrl('flickrPhotoPicker/photos/photoSet'))
+    .factory('Flickr', ['PHOTOS_URL', 'PHOTOSET_URL', 'PHOTOSETPHOTOS_URL', '$resource',
+        function (PHOTOS_URL, PHOTOSET_URL, PHOTOSETPHOTOS_URL, $resource) {
 
-        var photosApi = $resource(PHOTOS_URL, {}, {
-            all: {
-                interceptor: {
-                    response: function(response) {
-                        return response.data;
+            var interceptor = {
+                    interceptor: {
+                        response: function (response) {
+                            return response.data;
+                        }
                     }
-                }}
-        });
+                },
+                photosApi = $resource(PHOTOS_URL, {}, {
+                    all: interceptor
+                }),
+                photoSetsApi = $resource(PHOTOSET_URL, {}, {
+                    all: interceptor
+                }),
+                photoSetPhotosApi = $resource(PHOTOSETPHOTOS_URL, {}, {
+                    all: interceptor
+                });
 
-        function getPhotos() {
-            return photosApi.all().$promise;
-        }
+            function getPhotos() {
+                return photosApi.all().$promise;
+            }
 
-        return {
-            getPhotos: getPhotos
-        };
+            function getPhotoSets() {
+                return photoSetsApi.all().$promise;
+            }
 
-    }]);
+            function getPhotoSetPhotos(id) {
+                return photoSetPhotosApi.all({ id: id }).$promise;
+            }
+
+            return {
+                getPhotos: getPhotos,
+                getPhotoSets: getPhotoSets,
+                getPhotoSetPhotos: getPhotoSetPhotos
+            };
+
+        }]);

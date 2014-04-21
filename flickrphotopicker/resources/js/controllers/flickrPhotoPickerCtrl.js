@@ -11,44 +11,94 @@ angular.module('flickrPhotoPicker')
             rawSelected: [],
             selectedInitialized: false,
             selected: [],
-            selectedText: 'Loading your photos',
-            photosLoaded: false,
+            selectedText: 'Loading your photo sets',
+            photoSetsLoaded: false,
+            photosLoaded: true,
             photoSets: [],
-            photosetid: '!!'
+            photos: {},
+            photosetid: null
         };
 
         $scope.toggleSelected = function (id) {
             var photo = _.find($scope.form.photos, { id: id });
             photo.checked = !photo.checked;
+
+            if (photo.checked) {
+                $scope.form.selected.push(photo);
+            } else {
+                removeSelected(id);
+            }
+        };
+
+        $scope.removeSelected = function (id) {
+            _(removeSelected(id))
+                .map('id')
+                .forEach(function (id) {
+                    var photo = _.find($scope.form.photos, { id: id });
+                    if (photo) {
+                        photo.checked = false;
+                    }
+                });
         };
 
         $scope.setSelected = function (selected) {
-            var photos = _($scope.form.photos);
-
-            if ($scope.form.photosetid !== '!!') {
-                photos = _($scope.form.photos).filter({ photosetid: +$scope.form.photosetid })
-            }
-
-            photos.forEach(function (photo) {
+            _.forEach($scope.form.photos, function (photo) {
+                var selectedPhoto = _.find($scope.form.selected, { id: photo.id });
                 photo.checked = selected;
+
+                if (selected && !selectedPhoto) {
+                    $scope.form.selected.push(photo);
+                } else if (!selected && selectedPhoto) {
+                    removeSelected(selectedPhoto.id);
+                }
             });
         };
 
         $scope.removeAllSelected = function () {
-            _.forEach($scope.form.selected, function (selected) {
-                $scope.toggleSelected(selected.id);
+            var ids = _.map($scope.form.selected, 'id');
+
+            _.forEach(ids, function (id) {
+                var photo = _.find($scope.form.photos, { id: id });
+                if (photo) {
+                    photo.checked = false;
+                }
+            });
+
+            $scope.form.selected.length = 0;
+        };
+
+        $scope.changePhotoSet = function () {
+            $scope.form.photosLoaded = false;
+            Flickr.getPhotoSetPhotos($scope.form.photosetid).then(function (result) {
+                $scope.form.photos = result.photos;
+                $scope.form.photosLoaded = true;
+
+                _.forEach($scope.form.photos, function (photo) {
+                    photo.photosetid = $scope.form.photosetid;
+                    photo.photoset = _.find($scope.form.photoSets, { id: $scope.form.photosetid }).title._content;
+                });
+
+                selectLoaded();
             });
         };
 
-        $scope.$watch('form', function () {
-            if (_.isObject($scope.form.photos)) {
-                $scope.form.selected = _.filter($scope.form.photos, 'checked');
-
-                if (!$scope.form.selectedInitialized && !_.isEmpty($scope.form.rawSelected)) {
-                    initSelected();
+        /**
+         * Check the photos that have been selected.
+         */
+        function selectLoaded() {
+            _.forEach($scope.form.selected, function (selected) {
+                var photo = _.find($scope.form.photos, { id: selected.id });
+                if (photo) {
+                    photo.checked = true;
                 }
-            }
-        }, true);
+            });
+        }
+
+        function removeSelected(id) {
+            return _.remove($scope.form.selected, function (photo) {
+                return photo.id === id;
+            });
+        }
 
         /**
          * Selects the photos that have been already selected
@@ -63,20 +113,14 @@ angular.module('flickrPhotoPicker')
             $scope.form.selectedInitialized = true;
         }
 
-        Flickr.getPhotos().then(function (photos) {
-            $scope.form.photos = _.values(photos.photos);
-            $scope.form.selectedText = 'Select photos below';
-            $scope.form.photosLoaded = true;
-
-            $scope.form.photoSets = _($scope.form.photos)
-                .map(function (photo) {
-                    return {
-                        id: photo.photosetid,
-                        name: photo.photosetname
-                    };
-                })
-                .uniq(false, 'id')
-                .value();
+        $scope.$watch('form.rawSelected', function () {
+            if (!_.isEmpty($scope.form.rawSelected)) {
+                $scope.form.selected = _.map($scope.form.rawSelected, angular.fromJson);
+            }
         });
 
+        Flickr.getPhotoSets().then(function (result) {
+            $scope.form.photoSetsLoaded = true;
+            $scope.form.photoSets = result.photosets;
+        });
     }]);
