@@ -36,14 +36,12 @@ You also have access to several other pieces of information about each photo. Th
 {% set photo = photos[0] %}
 
 {{ photo.id }}
-{{ photo.owner }}
 {{ photo.secret }}
 {{ photo.server }}
 {{ photo.farm }}
 {{ photo.title }}
-{{ photo.ispublic }}
-{{ photo.isfriend }}
-{{ photo.isfamily }}
+{{ photo.photosetid }}
+{{ photo.photoset }}
 
 // URL links to the photos
 {{ photo.links.s | raw }}
@@ -65,14 +63,12 @@ Example photo object when JSON encoded:
 
 {
    "id":"8980505187",
-   "owner":"44494372@N05",
    "secret":"74eb03d8b4",
    "server":"2840",
    "farm":3,
    "title":"Apollo 11, 1969",
-   "ispublic":1,
-   "isfriend":0,
-   "isfamily":0,
+   "photosetid":"72157623741800966",
+   "photoset":"NASA Center Namesakes",
    "links":{
       "s":"http:\/\/farm3.staticflickr.com\/2840\/8980505187_74eb03d8b4_s.jpg",
       "q":"http:\/\/farm3.staticflickr.com\/2840\/8980505187_74eb03d8b4_q.jpg",
@@ -87,9 +83,7 @@ Example photo object when JSON encoded:
 ```
 
 ## Roadmap
-### In Progress
-* Lazy load and cache photoset images on the admin panel.
-* Smarter fetching of images when loading details.
+### Next
 * Tutorial on this plugin.
 
 ### Ideas for Features
@@ -98,6 +92,10 @@ Example photo object when JSON encoded:
 * Restrict to selecting a single photo.
 
 ## Change Log
+### 1.0.0 (20 April 2014)
+* Smarter fetching of images in the admin panel
+* Saves entire photo object so that retrieval does not require API calls
+
 ### 0.0.1 (4 April 2014)
 * Custom Flickr Picker Field
 * Supports a single user id

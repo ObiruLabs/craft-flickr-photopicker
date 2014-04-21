@@ -51,6 +51,38 @@ class FlickrPhotoPicker_PhotoListService extends BaseApplicationComponent
     }
 
     /**
+     * Retrieves the all of the photo sets.
+     *
+     * @return array
+     */
+    public function getAllPhotoSets()
+    {
+        $settings = craft()->plugins->getPlugin('flickrPhotoPicker')->getSettings();
+        $apiKey = $settings['apiKey'];
+        $userId = $settings['userId'];
+
+        return $this->getFromUrl($this->photoSetsUrl($apiKey, $userId), 'photosets', 'photoset');
+    }
+
+    /**
+     * Retrieves photos for the given photo set.
+     */
+    public function getPhotoSetPhotos($photoSetId)
+    {
+        $settings = craft()->plugins->getPlugin('flickrPhotoPicker')->getSettings();
+        $apiKey = $settings['apiKey'];
+        $userId = $settings['userId'];
+        $allPhotos = array();
+
+        $photos = $this->getFromUrl($this->photosForPhotoSetUrl($apiKey, $photoSetId), 'photoset', 'photo');
+        foreach ($photos as $photoId => $photoDetails) {
+            $allPhotos[$photoId] = $photoDetails;
+        }
+
+        return $allPhotos;
+    }
+
+    /**
      * Retrieve all items from paged resource.
      *
      * @param $url
@@ -125,7 +157,7 @@ class FlickrPhotoPicker_PhotoListService extends BaseApplicationComponent
     public function getPhotoUrls($photo)
     {
         $sizes = array('s', 'q', 't', 'm', 'n', 'c', 'b', 'o');
-        $link = "http://farm{$photo['farm']}.staticflickr.com/{$photo['server']}/{$photo['id']}_{$photo['secret']}";
+        $link = "http://farm{$photo->farm}.staticflickr.com/{$photo->server}/{$photo->id}_{$photo->secret}";
         $links = array();
 
         for($i = 0; $i < count($sizes); ++$i) {

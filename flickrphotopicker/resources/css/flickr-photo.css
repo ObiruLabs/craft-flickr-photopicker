@@ -4,7 +4,7 @@
     text-align: center;
 }
 
-.flickr-photo--selected .spinner.is-hidden {
+.spinner.is-hidden {
     visibility: hidden;
 }
 

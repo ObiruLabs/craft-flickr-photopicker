@@ -15,4 +15,19 @@ class FlickrPhotoPicker_PhotosController extends BaseController
 
         $this->returnJson(array('photos' => $photos));
     }
+
+    public function actionAllPhotoSets()
+    {
+        $photoSets = craft()->flickrPhotoPicker_photoList->getAllPhotoSets();
+
+        $this->returnJson(array('photosets' => $photoSets));
+    }
+
+    public function actionPhotoSet()
+    {
+        $photoSetId = craft()->request->getQuery('id');
+        $photos = craft()->flickrPhotoPicker_photoList->getPhotoSetPhotos($photoSetId);
+
+        $this->returnJson(array('photos' => $photos));
+    }
 }
