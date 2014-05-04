@@ -1,0 +1,11 @@
+{% import "_includes/forms" as forms %}
+
+<div class="field">
+    {{ forms.textField({
+    label: 'Limit',
+    instructions: 'Limit the number of selectable photos.',
+    name: 'limit',
+    value: settings.limit,
+    size: 2
+    }) }}
+</div>

@@ -89,9 +89,12 @@ Example photo object when JSON encoded:
 ### Ideas for Features
 * Ability to configure different user ids per field.
 * Ability to restrict a field to a certain photo set.
-* Restrict to selecting a single photo.
 
 ## Change Log
+### 1.1.0 (4 May 2014)
+* New field setting to limit number of photos that can be selected
+* Fixes #4 - Field can now be used in a matrix
+
 ### 1.0.0 (20 April 2014)
 * Smarter fetching of images in the admin panel
 * Saves entire photo object so that retrieval does not require API calls
