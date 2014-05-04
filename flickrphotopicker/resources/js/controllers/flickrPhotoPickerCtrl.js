@@ -9,18 +9,25 @@ angular.module('flickrPhotoPicker')
         $scope.form = {
             name: null,
             rawSelected: [],
-            selectedInitialized: false,
             selected: [],
             selectedText: 'Loading your photo sets',
             photoSetsLoaded: false,
             photosLoaded: true,
             photoSets: [],
             photos: {},
-            photosetid: null
+            photosetid: null,
+            limit: null
         };
 
         $scope.toggleSelected = function (id) {
             var photo = _.find($scope.form.photos, { id: id });
+
+            if ($scope.form.limit !== null &&
+                $scope.form.selected.length >= $scope.form.limit &&
+                !photo.checked) {
+                return;
+            }
+
             photo.checked = !photo.checked;
 
             if (photo.checked) {
@@ -98,19 +105,6 @@ angular.module('flickrPhotoPicker')
             return _.remove($scope.form.selected, function (photo) {
                 return photo.id === id;
             });
-        }
-
-        /**
-         * Selects the photos that have been already selected
-         * when the form was previously saved.
-         */
-        function initSelected() {
-            _($scope.form.rawSelected).uniq().forEach(function (photoId) {
-                var photo = _.find($scope.form.photos, { id: photoId });
-                photo.checked = true;
-                $scope.form.selected.push(photo);
-            });
-            $scope.form.selectedInitialized = true;
         }
 
         $scope.$watch('form.rawSelected', function () {
