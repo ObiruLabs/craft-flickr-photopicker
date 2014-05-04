@@ -15,9 +15,8 @@
 {% from _self import flickrImages %}
 
 <div class="flickr-photo"
-     ng-app="flickrPhotoPicker"
      ng-controller="flickrPhotoPickerCtrl"
-     ng-init="form.rawSelected={{ values | json_encode() }}" ng-cloak>
+     ng-init="form.rawSelected={{ values | json_encode() }};form.limit={{ settings.limit | default('null')}}" ng-cloak>
     <div>
         <input type="hidden" name="{{name}}" value="">
         <input ng-repeat="photo in form.selected"
@@ -28,7 +27,7 @@
     </div>
 
     <div class="flickr-photo--selected">
-        <p ng-hide="form.selected.length">Select photos below</p>
+        <p ng-hide="form.selected.length">Select {[{ form.limit }]} photo{[{ form.limit && form.limit === 1 ? '' : 's' }]} below</p>
         <div ng-show="form.selected.length"
              ng-click="removeAllSelected()"
              class="flickr-photo--remove btn">Remove all</div>
@@ -49,10 +48,10 @@
                     <option value="" disabled selected>Select a photo set</option>
                 </select>
             </div>
-            <div ng-click="setSelected(true)" ng-show="form.photosLoaded && form.photosetid" class="btn">
+            <div ng-click="setSelected(true)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
                 Select All
             </div>
-            <div ng-click="setSelected(false)" ng-show="form.photosLoaded && form.photosetid" class="btn">
+            <div ng-click="setSelected(false)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
                 Deselect All
             </div>
             <span ng-class="{ 'is-hidden': form.photosLoaded }" class="spinner"></span>
@@ -67,6 +66,8 @@
 {% includeJsResource "flickrphotopicker/js/vendor/lodash.min.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/angular.min.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/angular-resource.min.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/jquery.livequery.min.js" %}
 {% includeJsResource "flickrphotopicker/js/app.js" %}
 {% includeJsResource "flickrphotopicker/js/services/flickr.js" %}
 {% includeJsResource "flickrphotopicker/js/controllers/flickrPhotoPickerCtrl.js" %}
+{% includeJsResource "flickrphotopicker/js/bootstrap.js" %}
