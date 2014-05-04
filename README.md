@@ -93,7 +93,7 @@ Example photo object when JSON encoded:
 ## Change Log
 ### 1.1.0 (4 May 2014)
 * New field setting to limit number of photos that can be selected
-* Fixes #4 - Field can now be used in a matrix
+* Fixes #2 - Field can now be used in a matrix
 
 ### 1.0.0 (20 April 2014)
 * Smarter fetching of images in the admin panel
