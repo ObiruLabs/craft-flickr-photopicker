@@ -10,7 +10,7 @@ class FlickrPhotoPickerPlugin extends BasePlugin
 
     function getVersion()
     {
-        return '1.1.1-alpha';
+        return '1.1.1';
     }
 
     function getDeveloper()
