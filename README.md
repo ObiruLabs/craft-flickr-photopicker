@@ -91,6 +91,9 @@ Example photo object when JSON encoded:
 * Ability to restrict a field to a certain photo set.
 
 ## Change Log
+### 1.1.1 (14 May 2014)
+* Fixes #6 - Fixing syntax to avoid problems in different environments
+
 ### 1.1.0 (4 May 2014)
 * New field setting to limit number of photos that can be selected
 * Fixes #2 - Field can now be used in a matrix
