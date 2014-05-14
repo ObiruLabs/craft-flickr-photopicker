@@ -98,13 +98,16 @@ class FlickrPhotoPicker_PhotoListService extends BaseApplicationComponent
         $allItems = array();
 
         while ($page <= $maxPage) {
-            $response = json_decode(file_get_contents($url.'&page='.$page.'&per_page='.$perPage), true)[$responseKey];
-            $items = $response[$itemKey];
-            $maxPage = $response['pages'];
+            $contents = file_get_contents($url.'&page='.$page.'&per_page='.$perPage);
+            $json = json_decode($contents);
+            $response = $json->$responseKey;
+
+            $items = $response->$itemKey;
+            $maxPage = $response->pages;
             $page++;
 
             for($i = 0; $i < count($items); ++$i) {
-                $allItems[$items[$i]['id']] = $items[$i];
+                $allItems[$items[$i]->id] = $items[$i];
             }
         }
 
