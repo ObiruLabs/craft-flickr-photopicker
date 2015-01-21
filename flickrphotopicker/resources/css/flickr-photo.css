@@ -41,6 +41,7 @@
 }
 
 .flickr-photo li {
+    display: inline-block;
     height: 83px;
     text-align: center;
     width: 105px;
