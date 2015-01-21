@@ -43,7 +43,7 @@
             <span>Photo Set: </span>
             <div class="select">
                 <select ng-model="form.photosetid"
-                        ng-options="photoSet.id as photoSet.title._content for (id, photoSet) in form.photoSets"
+                        ng-options="photoSet.id as photoSet.title._content for photoSet in form.photoSets"
                         ng-change="changePhotoSet()">
                     <option value="" disabled selected>Select a photo set</option>
                 </select>

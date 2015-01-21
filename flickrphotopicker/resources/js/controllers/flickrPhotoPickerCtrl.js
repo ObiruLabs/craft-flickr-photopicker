@@ -115,6 +115,6 @@ angular.module('flickrPhotoPicker')
 
         Flickr.getPhotoSets().then(function (result) {
             $scope.form.photoSetsLoaded = true;
-            $scope.form.photoSets = result.photosets;
+            $scope.form.photoSets = _.sortBy(result.photosets, 'date_create').reverse();
         });
     }]);
