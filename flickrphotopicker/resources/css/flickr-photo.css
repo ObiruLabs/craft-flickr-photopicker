@@ -1,3 +1,7 @@
+.flickr-photo--form-control {
+    margin-bottom: 10px;
+}
+
 .flickr-photo--selected p {
     margin: 0;
     padding-top: 50px;
@@ -21,6 +25,24 @@
 
 .flickr-photo .thumbsview {
     overflow: auto;
+}
+
+.flickr-photo .thumbsview.is-small .flickr-photo--thumb,
+.flickr-photo .thumbsview.is-small .flickr-photo--thumb img {
+    height: 50px;
+}
+
+.flickr-photo .thumbsview.is-small li {
+    width: 65px;
+}
+
+.flickr-photo .thumbsview.is-large .flickr-photo--thumb,
+.flickr-photo .thumbsview.is-large .flickr-photo--thumb img {
+    height: 125px;
+}
+
+.flickr-photo .thumbsview.is-large li {
+    width: 140px;
 }
 
 .flickr-photo--selected {
@@ -76,6 +98,11 @@
     border-color: #8cb941;
 }
 
+.flickr-photo--control-label {
+    display: inline-block;
+    width: 100px;
+}
+
 .flickr-photo--checkmark {
     border: 15px solid #8cb941;
     border-bottom-color: rgba(0, 0, 0, 0);
@@ -94,6 +121,11 @@
     position: relative;
     right: -1px;
     top: -15px;
+}
+
+.flickr-photo--radio {
+    display: inline-block;
+    width: 75px;
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {

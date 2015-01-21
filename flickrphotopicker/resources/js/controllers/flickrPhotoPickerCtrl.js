@@ -16,7 +16,8 @@ angular.module('flickrPhotoPicker')
             photoSets: [],
             photos: {},
             photosetid: null,
-            limit: null
+            limit: null,
+            previewSize: 'normal'
         };
 
         $scope.toggleSelected = function (id) {

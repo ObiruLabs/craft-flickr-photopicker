@@ -1,5 +1,5 @@
 {% macro flickrImages(model, action) %}
-<ul class="thumbsview">
+<ul class="thumbsview" ng-class="{ 'is-small': form.previewSize === 'small', 'is-normal': form.previewSize === 'normal', 'is-large': form.previewSize === 'large' }">
     <li ng-repeat="photo in {{ model }}">
         <span class="flickr-photo--thumb"
               ng-class="{ 'is-selected': photo.checked }"
@@ -39,23 +39,45 @@
             <span class="spinner"></span>
             <span class="flickr-photo--selected-text">{[{ form.selectedText }]}</span>
         </p>
+
         <div class="flickr-photo--photoset" ng-show="form.photoSetsLoaded">
-            <span>Photo Set: </span>
-            <div class="select">
-                <select ng-model="form.photosetid"
-                        ng-options="photoSet.id as photoSet.title._content for photoSet in form.photoSets"
-                        ng-change="changePhotoSet()">
-                    <option value="" disabled selected>Select a photo set</option>
-                </select>
+            <div class="flickr-photo--form-control">
+                <span class="flickr-photo--control-label">Photo Set</span>
+                <div class="select">
+                    <select ng-model="form.photosetid"
+                            ng-options="photoSet.id as photoSet.title._content for photoSet in form.photoSets"
+                            ng-change="changePhotoSet()">
+                        <option value="" disabled selected>Select a photo set</option>
+                    </select>
+                </div>
+                <div ng-click="setSelected(true)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
+                    Select All
+                </div>
+                <div ng-click="setSelected(false)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
+                    Deselect All
+                </div>
             </div>
-            <div ng-click="setSelected(true)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
-                Select All
-            </div>
-            <div ng-click="setSelected(false)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
-                Deselect All
+            <div class="flickr-photo--form-control" ng-show="form.photosLoaded && form.photosetid">
+                <span class="flickr-photo--control-label">Preview Size</span>
+                <div class="flickr-photo--radio">
+                    <label>
+                        <input type="radio" value="small" name="_{{name}}_radio" ng-model="form.previewSize"> Small
+                    </label>
+                </div>
+                <div class="flickr-photo--radio">
+                    <label>
+                        <input type="radio" value="normal" name="_{{name}}_radio" ng-model="form.previewSize"> Normal
+                    </label>
+                </div>
+                <div class="flickr-photo--radio">
+                    <label>
+                        <input type="radio" value="large" name="_{{name}}_radio" ng-model="form.previewSize"> Large
+                    </label>
+                </div>
             </div>
             <span ng-class="{ 'is-hidden': form.photosLoaded }" class="spinner"></span>
         </div>
+
         <div ng-show="form.photosLoaded">
             {{ flickrImages('form.photos', 'toggleSelected') }}
         </div>
