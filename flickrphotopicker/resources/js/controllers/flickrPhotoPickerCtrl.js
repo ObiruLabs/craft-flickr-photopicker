@@ -17,7 +17,8 @@ angular.module('flickrPhotoPicker')
             photos: {},
             photosetid: null,
             limit: null,
-            previewSize: 'normal'
+            previewSize: 'normal',
+            isReordering: false
         };
 
         $scope.toggleSelected = function (id) {
@@ -39,6 +40,10 @@ angular.module('flickrPhotoPicker')
         };
 
         $scope.removeSelected = function (id) {
+            if ($scope.form.isReordering) {
+                return;
+            }
+
             _(removeSelected(id))
                 .map('id')
                 .forEach(function (id) {

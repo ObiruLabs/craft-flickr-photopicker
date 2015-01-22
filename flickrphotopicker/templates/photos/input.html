@@ -1,7 +1,7 @@
 {% macro flickrImages(model, action) %}
-<ul class="thumbsview" ng-class="{ 'is-small': form.previewSize === 'small', 'is-normal': form.previewSize === 'normal', 'is-large': form.previewSize === 'large' }">
-    <li ng-repeat="photo in {{ model }}">
-        <span class="flickr-photo--thumb"
+<div class="thumbsview" ng-class="{ 'is-reordering': form.isReordering, 'is-small': form.previewSize === 'small', 'is-normal': form.previewSize === 'normal', 'is-large': form.previewSize === 'large' }">
+    <div ng-repeat-reorder="photo in {{ model }}" ng-repeat-reorder-handle=".flickr-photo--thumb-container > img" class="flickr-photo--thumb">
+        <span class="flickr-photo--thumb-container"
               ng-class="{ 'is-selected': photo.checked }"
               ng-click="{{ action }}(photo.id)">
             <img src="http://farm{[{ photo.farm }]}.staticflickr.com/{[{ photo.server }]}/{[{ photo.id }]}_{[{ photo.secret }]}_s.jpg">
@@ -9,8 +9,8 @@
                 <span>√</span>
             </span>
         </span>
-    </li>
-</ul>
+    </div>
+</div>
 {% endmacro %}
 {% from _self import flickrImages %}
 
@@ -28,9 +28,16 @@
 
     <div class="flickr-photo--selected">
         <p ng-hide="form.selected.length">Select {[{ form.limit }]} photo{[{ form.limit && form.limit === 1 ? '' : 's' }]} below</p>
-        <div ng-show="form.selected.length"
+        <div ng-show="form.selected.length && !form.isReordering"
              ng-click="removeAllSelected()"
              class="flickr-photo--remove btn">Remove all</div>
+        <div ng-show="form.selected.length"
+             ng-click="form.isReordering = !form.isReordering"
+             class="flickr-photo--remove btn">
+            <span ng-show="form.isReordering">Back to thumbnail view</span>
+            <span ng-hide="form.isReordering">Reorder</span>
+            <span></span>
+        </div>
         {{ flickrImages('form.selected', 'removeSelected') }}
     </div>
 
@@ -86,8 +93,11 @@
 
 {% includeCssResource "flickrphotopicker/css/flickr-photo.css" %}
 {% includeJsResource "flickrphotopicker/js/vendor/lodash.min.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/hammer.min.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/angular.min.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/angular-resource.min.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/angular-hammer.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/ngRepeatReorder.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/jquery.livequery.min.js" %}
 {% includeJsResource "flickrphotopicker/js/app.js" %}
 {% includeJsResource "flickrphotopicker/js/services/flickr.js" %}

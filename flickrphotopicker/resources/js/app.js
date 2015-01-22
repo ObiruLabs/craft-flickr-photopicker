@@ -5,7 +5,8 @@
  */
 angular.module('flickrPhotoPicker', [
 
-        'ngResource'
+        'ngResource',
+        'ngRepeatReorder'
 
     ]).config(['$interpolateProvider', function ($interpolateProvider) {
 
