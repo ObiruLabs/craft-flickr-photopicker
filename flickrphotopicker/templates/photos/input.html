@@ -82,6 +82,16 @@
                     </label>
                 </div>
             </div>
+            <div class="flickr-photo--form-control" ng-show="form.photosLoaded && form.photosetid">
+                <span class="flickr-photo--control-label">Sort By</span>
+                <span class="flickr-photo--sort-by" ng-click="toggleSortBy('none')" ng-class="{ 'is-selected': form.sortField === 'none' }">None</span>
+                <span class="flickr-photo--sort-by" ng-click="toggleSortBy('dateupload')" ng-class="{ 'is-selected': form.sortField === 'dateupload' }">
+                    Date Uploaded <span ng-show="form.sortField === 'dateupload'">{[{ sortDirection('dateupload') }]}</span>
+                </span>
+                <span class="flickr-photo--sort-by" ng-click="toggleSortBy('datetaken')" ng-class="{ 'is-selected': form.sortField === 'datetaken' }">
+                    Date Taken <span ng-show="form.sortField === 'datetaken'">{[{ sortDirection('datetaken') }]}</span>
+                </span>
+            </div>
             <span ng-class="{ 'is-hidden': form.photosLoaded }" class="spinner"></span>
         </div>
 

@@ -157,6 +157,28 @@
     width: 75px;
 }
 
+.flickr-photo--sort-by {
+    cursor: pointer;
+    display: inline-block;
+    width: 130px;
+}
+
+.flickr-photo--sort-by:hover {
+    text-decoration: underline;
+}
+
+.flickr-photo--sort-by.is-selected {
+    font-weight: 700;
+}
+
+.flickr-photo--sort-by > span {
+    font-size: 10px;
+}
+
+.flickr-photo--control-label + .flickr-photo--sort-by {
+    width: 75px;
+}
+
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
