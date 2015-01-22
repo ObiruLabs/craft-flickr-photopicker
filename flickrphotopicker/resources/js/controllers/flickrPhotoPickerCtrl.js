@@ -16,7 +16,14 @@ angular.module('flickrPhotoPicker')
             photoSets: [],
             photos: {},
             photosetid: null,
-            limit: null
+            limit: null,
+            previewSize: 'normal',
+            isReordering: false,
+            sortField: 'none',
+            sortDirection: {
+                dateupload: 'asc',
+                datetaken: 'asc'
+            }
         };
 
         $scope.toggleSelected = function (id) {
@@ -38,6 +45,10 @@ angular.module('flickrPhotoPicker')
         };
 
         $scope.removeSelected = function (id) {
+            if ($scope.form.isReordering) {
+                return;
+            }
+
             _(removeSelected(id))
                 .map('id')
                 .forEach(function (id) {
@@ -86,8 +97,42 @@ angular.module('flickrPhotoPicker')
                 });
 
                 selectLoaded();
+
+                sortByField($scope.form.sortField, $scope.form.sortDirection[$scope.form.sortField]);
             });
         };
+
+        $scope.toggleSortBy = function (field) {
+            if ($scope.form.sortDirection[field] === 'asc') {
+                $scope.form.sortDirection[field] = 'desc';
+            } else {
+                $scope.form.sortDirection[field] = 'asc';
+            }
+
+            sortByField(field, $scope.form.sortDirection[field]);
+        };
+
+        $scope.sortDirection = function (field) {
+            return $scope.form.sortDirection[field] === 'asc' ? '▲' : '▼';
+        };
+
+        function sortByField(field, direction) {
+            if (field === 'none') {
+                $scope.form.photos = _.sortBy($scope.form.photos, 'id');
+            } else if (field === 'dateupload') {
+                $scope.form.photos = _.sortBy($scope.form.photos, 'dateupload');
+            } else if (field === 'datetaken') {
+                $scope.form.photos = _.sortBy($scope.form.photos, function (photo) {
+                    return photo.datetaken ? Date.parse(photo.datetaken) : 0;
+                });
+            }
+
+            if ((field === 'dateupload' || field === 'datetaken') && direction === 'desc') {
+                $scope.form.photos = $scope.form.photos.reverse();
+            }
+
+            $scope.form.sortField = field;
+        }
 
         /**
          * Check the photos that have been selected.
@@ -115,6 +160,6 @@ angular.module('flickrPhotoPicker')
 
         Flickr.getPhotoSets().then(function (result) {
             $scope.form.photoSetsLoaded = true;
-            $scope.form.photoSets = result.photosets;
+            $scope.form.photoSets = _.sortBy(result.photosets, 'date_create').reverse();
         });
     }]);

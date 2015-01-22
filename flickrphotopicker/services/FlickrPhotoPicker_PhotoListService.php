@@ -74,7 +74,10 @@ class FlickrPhotoPicker_PhotoListService extends BaseApplicationComponent
         $userId = $settings['userId'];
         $allPhotos = array();
 
-        $photos = $this->getFromUrl($this->photosForPhotoSetUrl($apiKey, $photoSetId), 'photoset', 'photo');
+        $url = $this->photosForPhotoSetUrl($apiKey, $photoSetId);
+        $url .= '&extras=date_upload,date_taken,owner_name';
+
+        $photos = $this->getFromUrl($url, 'photoset', 'photo');
         foreach ($photos as $photoId => $photoDetails) {
             $allPhotos[$photoId] = $photoDetails;
         }

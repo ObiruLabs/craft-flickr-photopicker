@@ -1,7 +1,7 @@
 {% macro flickrImages(model, action) %}
-<ul class="thumbsview">
-    <li ng-repeat="photo in {{ model }}">
-        <span class="flickr-photo--thumb"
+<div class="thumbsview" ng-class="{ 'is-reordering': form.isReordering, 'is-small': form.previewSize === 'small', 'is-normal': form.previewSize === 'normal', 'is-large': form.previewSize === 'large' }">
+    <div ng-repeat-reorder="photo in {{ model }}" ng-repeat-reorder-handle=".flickr-photo--thumb-container > img" class="flickr-photo--thumb">
+        <span class="flickr-photo--thumb-container"
               ng-class="{ 'is-selected': photo.checked }"
               ng-click="{{ action }}(photo.id)">
             <img src="http://farm{[{ photo.farm }]}.staticflickr.com/{[{ photo.server }]}/{[{ photo.id }]}_{[{ photo.secret }]}_s.jpg">
@@ -9,8 +9,8 @@
                 <span>√</span>
             </span>
         </span>
-    </li>
-</ul>
+    </div>
+</div>
 {% endmacro %}
 {% from _self import flickrImages %}
 
@@ -28,9 +28,16 @@
 
     <div class="flickr-photo--selected">
         <p ng-hide="form.selected.length">Select {[{ form.limit }]} photo{[{ form.limit && form.limit === 1 ? '' : 's' }]} below</p>
-        <div ng-show="form.selected.length"
+        <div ng-show="form.selected.length && !form.isReordering"
              ng-click="removeAllSelected()"
              class="flickr-photo--remove btn">Remove all</div>
+        <div ng-show="form.selected.length"
+             ng-click="form.isReordering = !form.isReordering"
+             class="flickr-photo--remove btn">
+            <span ng-show="form.isReordering">Back to thumbnail view</span>
+            <span ng-hide="form.isReordering">Reorder</span>
+            <span></span>
+        </div>
         {{ flickrImages('form.selected', 'removeSelected') }}
     </div>
 
@@ -39,23 +46,55 @@
             <span class="spinner"></span>
             <span class="flickr-photo--selected-text">{[{ form.selectedText }]}</span>
         </p>
+
         <div class="flickr-photo--photoset" ng-show="form.photoSetsLoaded">
-            <span>Photo Set: </span>
-            <div class="select">
-                <select ng-model="form.photosetid"
-                        ng-options="photoSet.id as photoSet.title._content for (id, photoSet) in form.photoSets"
-                        ng-change="changePhotoSet()">
-                    <option value="" disabled selected>Select a photo set</option>
-                </select>
+            <div class="flickr-photo--form-control">
+                <span class="flickr-photo--control-label">Photo Set</span>
+                <div class="select">
+                    <select ng-model="form.photosetid"
+                            ng-options="photoSet.id as photoSet.title._content for photoSet in form.photoSets"
+                            ng-change="changePhotoSet()">
+                        <option value="" disabled selected>Select a photo set</option>
+                    </select>
+                </div>
+                <div ng-click="setSelected(true)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
+                    Select All
+                </div>
+                <div ng-click="setSelected(false)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
+                    Deselect All
+                </div>
             </div>
-            <div ng-click="setSelected(true)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
-                Select All
+            <div class="flickr-photo--form-control" ng-show="form.photosLoaded && form.photosetid">
+                <span class="flickr-photo--control-label">Preview Size</span>
+                <div class="flickr-photo--radio">
+                    <label>
+                        <input type="radio" value="small" name="_{{name}}_radio" ng-model="form.previewSize"> Small
+                    </label>
+                </div>
+                <div class="flickr-photo--radio">
+                    <label>
+                        <input type="radio" value="normal" name="_{{name}}_radio" ng-model="form.previewSize"> Normal
+                    </label>
+                </div>
+                <div class="flickr-photo--radio">
+                    <label>
+                        <input type="radio" value="large" name="_{{name}}_radio" ng-model="form.previewSize"> Large
+                    </label>
+                </div>
             </div>
-            <div ng-click="setSelected(false)" ng-show="form.photosLoaded && form.photosetid && form.limit === null" class="btn">
-                Deselect All
+            <div class="flickr-photo--form-control" ng-show="form.photosLoaded && form.photosetid">
+                <span class="flickr-photo--control-label">Sort By</span>
+                <span class="flickr-photo--sort-by" ng-click="toggleSortBy('none')" ng-class="{ 'is-selected': form.sortField === 'none' }">None</span>
+                <span class="flickr-photo--sort-by" ng-click="toggleSortBy('dateupload')" ng-class="{ 'is-selected': form.sortField === 'dateupload' }">
+                    Date Uploaded <span ng-show="form.sortField === 'dateupload'">{[{ sortDirection('dateupload') }]}</span>
+                </span>
+                <span class="flickr-photo--sort-by" ng-click="toggleSortBy('datetaken')" ng-class="{ 'is-selected': form.sortField === 'datetaken' }">
+                    Date Taken <span ng-show="form.sortField === 'datetaken'">{[{ sortDirection('datetaken') }]}</span>
+                </span>
             </div>
             <span ng-class="{ 'is-hidden': form.photosLoaded }" class="spinner"></span>
         </div>
+
         <div ng-show="form.photosLoaded">
             {{ flickrImages('form.photos', 'toggleSelected') }}
         </div>
@@ -64,8 +103,11 @@
 
 {% includeCssResource "flickrphotopicker/css/flickr-photo.css" %}
 {% includeJsResource "flickrphotopicker/js/vendor/lodash.min.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/hammer.min.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/angular.min.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/angular-resource.min.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/angular-hammer.js" %}
+{% includeJsResource "flickrphotopicker/js/vendor/ngRepeatReorder.js" %}
 {% includeJsResource "flickrphotopicker/js/vendor/jquery.livequery.min.js" %}
 {% includeJsResource "flickrphotopicker/js/app.js" %}
 {% includeJsResource "flickrphotopicker/js/services/flickr.js" %}
