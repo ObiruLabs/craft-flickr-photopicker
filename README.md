@@ -91,6 +91,13 @@ Example photo object when JSON encoded:
 * Ability to restrict a field to a certain photo set.
 
 ## Change Log
+### 1.2.0 (22 January 2015)
+* Fixes #11 - See the newest photosets at the top of the list
+* Fixes #10 - Ability to change the size of thumbnails
+* Fixes #9 - Reorder images added to an entry
+* Fixes #7 - Ability to sort photoset photos
+* Fixes #12 - Craft 2.3 layout bug
+
 ### 1.1.1 (14 May 2014)
 * Fixes #6 - Fixing syntax to avoid problems in different environments
 
