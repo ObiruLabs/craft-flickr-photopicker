@@ -163,7 +163,7 @@ class FlickrPhotoPicker_PhotoListService extends BaseApplicationComponent
     public function getPhotoUrls($photo)
     {
         $sizes = array('s', 'q', 't', 'm', 'n', 'c', 'b', 'o');
-        $link = "http://farm{$photo->farm}.staticflickr.com/{$photo->server}/{$photo->id}_{$photo->secret}";
+        $link = "https://farm{$photo->farm}.staticflickr.com/{$photo->server}/{$photo->id}_{$photo->secret}";
         $links = array();
 
         for($i = 0; $i < count($sizes); ++$i) {
